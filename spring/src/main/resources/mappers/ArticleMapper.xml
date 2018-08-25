@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="kr.mz.study.mvc2.article.dao.ArticleTestDAO">
+  <select id="selecttest" resultType="int">
+    SELECT COUNT(idx) FROM BOARD WHERE deleted = 0
+  </select>
+  
+	<select id="getListCount">
+	  	SELECT 
+	  		COUNT(idx) 
+	  	  FROM 
+	  	  	BOARD 
+	  	 WHERE 
+	  	 	deleted = 0
+	</select>
+  
+	<select id="getArticleList">
+	  	SELECT 
+	  		idx, 
+	  		user_nm, 
+	  		article_pw, 
+	  		title, 
+	  		content, 
+	  		created 
+	  	  FROM 
+	  	  	BOARD 
+	  	 WHERE 
+	  	 	deleted = 0 
+	  	 ORDER BY 
+	  	 	idx 
+	  	 DESC 
+	  	 	LIMIT ?, ?
+	</select>
+
+	<select id="getArticleDetail">
+		SELECT 
+			user_nm, 
+			article_pw, 
+			title, 
+			content, 
+			created 
+		 FROM 
+		  	BOARD 
+		 WHERE 
+		 	idx = #{idx}
+	</select>  
+
+	<insert id="createArticle">
+		INSERT INTO BOARD (
+					user_nm, 
+					article_pw, 
+					title, 
+					content, 
+					created, 
+					deleted
+				) VALUES (
+					#{userNm}, 
+					#{articlePw}, 
+					#{title}, 
+					#{content}, 
+					NOW(), 
+					0
+				)
+	</insert>
+	
+	<update id="modifyArticle">
+		UPDATE 
+			BOARD 
+		   SET 
+		   	user_nm = #{userNm}, 
+		   	article_pw = #{articlePw}, 
+		   	title = #{title}, 
+		   	content = #{content} 
+		 WHERE 
+		 	idx = #{idx}
+	</update>
+	
+	<update id="deleteArticle">
+		UPDATE 
+			BOARD 
+		   SET 
+		   	deleted = 1
+		 WHERE 
+		 	idx = #{idx}
+	</update>
+	
+	<select id="checkPassword">
+		SELECT 
+			article_pw 
+		  FROM 
+		  	BOARD 
+		 WHERE 
+		 	idx = #{idx}
+	</select>
+	
+</mapper>
+		
+	
