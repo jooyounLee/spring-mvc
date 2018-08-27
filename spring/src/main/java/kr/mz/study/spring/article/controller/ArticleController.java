@@ -25,11 +25,7 @@ public class ArticleController {
 	
 	@Resource(name="articleService")
 	private ArticleService articleService;
-	
-	@RequestMapping("/test")
-	public String test() {
-		return "test";
-	}
+
 	
 	@RequestMapping("/get_articles")
 	public ModelAndView getArticles(@RequestParam(value="page", required=false) Integer pageParam) {

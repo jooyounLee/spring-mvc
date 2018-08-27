@@ -58,7 +58,7 @@
 		</dependency>
 
 		<!-- Logging -->
-<!-- 		<dependency>
+ 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
 			<version>${org.slf4j-version}</version>
@@ -98,7 +98,7 @@
 				</exclusion>
 			</exclusions>
 			<scope>runtime</scope>
-		</dependency> -->
+		</dependency> 
 
 		<!-- @Inject -->
 		<dependency>
