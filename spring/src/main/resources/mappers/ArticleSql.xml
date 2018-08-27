@@ -1,12 +1,19 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
   
-<mapper namespace="kr.mz.study.mvc2.article.dao.ArticleTestDAO">
-  <select id="selecttest" resultType="int">
-    SELECT COUNT(idx) FROM BOARD WHERE deleted = 0
-  </select>
-  
-	<select id="getListCount">
+<mapper namespace="articleSql">
+
+	<resultMap type="kr.mz.study.spring.article.model.Article" id="articleMap">
+		<result property="userName" column="user_nm"/>
+		<result property="password" column="article_pw"/>
+	</resultMap>
+	<parameterMap type="kr.mz.study.spring.article.model.Article" id="articleParamMap">
+		<parameter property="userName"/>
+		<parameter property="password"/>
+		<parameter property="idx"/>
+	</parameterMap>
+	
+	<select id="getListCount" resultType="int">
 	  	SELECT 
 	  		COUNT(idx) 
 	  	  FROM 
@@ -15,7 +22,7 @@
 	  	 	deleted = 0
 	</select>
   
-	<select id="getArticleList">
+	<select id="getArticleList" parameterType="map" resultMap="articleMap">
 	  	SELECT 
 	  		idx, 
 	  		user_nm, 
@@ -30,10 +37,10 @@
 	  	 ORDER BY 
 	  	 	idx 
 	  	 DESC 
-	  	 	LIMIT ?, ?
+	  	 	LIMIT #{firstPost}, #{countPostPerPage}
 	</select>
 
-	<select id="getArticleDetail">
+	<select id="getArticleDetail" resultMap="articleMap">
 		SELECT 
 			user_nm, 
 			article_pw, 
@@ -46,7 +53,7 @@
 		 	idx = #{idx}
 	</select>  
 
-	<insert id="createArticle">
+	<insert id="createArticle" parameterMap="articleParamMap">
 		INSERT INTO BOARD (
 					user_nm, 
 					article_pw, 
@@ -55,8 +62,8 @@
 					created, 
 					deleted
 				) VALUES (
-					#{userNm}, 
-					#{articlePw}, 
+					#{userName}, 
+					#{password}, 
 					#{title}, 
 					#{content}, 
 					NOW(), 
@@ -64,19 +71,19 @@
 				)
 	</insert>
 	
-	<update id="modifyArticle">
+	<update id="modifyArticle" parameterMap="articleParamMap">
 		UPDATE 
 			BOARD 
 		   SET 
-		   	user_nm = #{userNm}, 
-		   	article_pw = #{articlePw}, 
+		   	user_nm = #{userName}, 
+		   	article_pw = #{password}, 
 		   	title = #{title}, 
 		   	content = #{content} 
 		 WHERE 
 		 	idx = #{idx}
 	</update>
 	
-	<update id="deleteArticle">
+	<update id="deleteArticle" parameterType="map">
 		UPDATE 
 			BOARD 
 		   SET 
@@ -85,7 +92,7 @@
 		 	idx = #{idx}
 	</update>
 	
-	<select id="checkPassword">
+	<select id="checkPassword" parameterType="map" resultType="String">
 		SELECT 
 			article_pw 
 		  FROM 

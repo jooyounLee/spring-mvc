@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -71,33 +72,33 @@ public class ArticleController {
 	}
 	
 	@RequestMapping("/article_write")
-	public @ResponseBody int writeArticle(String articlePw, String title, String userNm, String content) {
+	public @ResponseBody int writeArticle(String password, String title, String userName, String content) {
 		
-		int createResult = articleService.createArticle(articlePw, title, userNm, content);
+		int createResult = articleService.createArticle(password, title, userName, content);
 		
 		return createResult;
 	}
 	
 	@RequestMapping("/article_update")
-	public @ResponseBody int updateArticle(String articlePw, String title, String userNm, String content, Integer idx) {
+	public @ResponseBody int updateArticle(String password, String title, String userName, String content, Integer idx) {
 		
-		boolean updateResult = articleService.updateArticle(articlePw, title, userNm, content, idx);
+		boolean updateResult = articleService.updateArticle(password, title, userName, content, idx);
 		
 		return (updateResult) ? 1 : 0;
 	}
 	
 	@RequestMapping("/article_delete")
-	public @ResponseBody boolean deleteArticle(Integer idx, @RequestParam("re-password") String articlePw) {
+	public @ResponseBody boolean deleteArticle(Integer idx, @RequestParam("re-password") String password) {
 		
-		boolean deleteResult = articleService.deleteArticle(idx, articlePw);
+		boolean deleteResult = articleService.deleteArticle(idx, password);
 		
 		return deleteResult;
 	}
 	
 	@RequestMapping("/check_pass")
-	public @ResponseBody boolean checkPass(Integer idx, @RequestParam("re-password") String articlePw) {
+	public @ResponseBody boolean checkPass(Integer idx, @RequestParam("re-password") String password) {
 		
-		boolean checkPassResult = articleService.isCorrectPassword(idx, articlePw);
+		boolean checkPassResult = articleService.isCorrectPassword(idx, password);
 		
 		return checkPassResult;
 	}

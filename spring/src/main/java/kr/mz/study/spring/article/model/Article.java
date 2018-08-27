@@ -6,9 +6,9 @@ public class Article {
 	
 	private int idx;
 	
-	private String userNm;
+	private String userName;
 	
-	private String articlePw;
+	private String password;
 	
 	private String title;
 	
@@ -18,11 +18,11 @@ public class Article {
 	
 	public Article() {}
 	
-	public Article(int idx, String userNm, String articlePw, String title, String content, Date created) {
+	public Article(int idx, String userName, String password, String title, String content, Date created) {
 		super();
 		this.idx = idx;
-		this.userNm = userNm;
-		this.articlePw = articlePw;
+		this.userName = userName;
+		this.password = password;
 		this.title = title;
 		this.content = content;
 		this.created = created;
@@ -36,20 +36,20 @@ public class Article {
 		this.idx = idx;
 	}
 
-	public String getuserNm() {
-		return userNm;
+	public String getUserName() {
+		return userName;
 	}
 
-	public void setuserNm(String userNm) {
-		this.userNm = userNm;
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
 
-	public String getarticlePw() {
-		return articlePw;
+	public String getPassword() {
+		return password;
 	}
 
-	public void setarticlePw(String articlePw) {
-		this.articlePw = articlePw;
+	public void setPassword(String password) {
+		this.password = password;
 	}
 
 	public String getTitle() {

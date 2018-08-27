@@ -72,31 +72,44 @@ public class ArticleService {
 
 	/**
 	 * 글 작성
-	 * @param articlePw
+	 * @param password
 	 * @param title
-	 * @param userNm
+	 * @param userName
 	 * @param content
 	 * @return int
 	 */
-	public int createArticle(String articlePw, String title, String userNm, String content) {
+	public int createArticle(String password, String title, String userName, String content) {
 
-		int createResult = dao.createArticle(articlePw, title, userNm, content);
+		Article article = new Article();
+		article.setPassword(password);
+		article.setTitle(title);
+		article.setUserName(userName);
+		article.setContent(content);
+		
+		int createResult = dao.createArticle(article);
 
 		return createResult;
 	}
 
 	/**
 	 * 글 수정
-	 * @param articlePw
+	 * @param password
 	 * @param title
-	 * @param userNm
+	 * @param userName
 	 * @param content
 	 * @param idx
 	 * @return int
 	 */
-	public boolean updateArticle(String articlePw, String title, String userNm, String content, Integer idx) {
+	public boolean updateArticle(String password, String title, String userName, String content, Integer idx) {
 		
-		int updateResult = dao.modifyArticle(userNm, articlePw, title, content, idx);
+		Article article = new Article();
+		article.setIdx(idx);
+		article.setPassword(password);
+		article.setTitle(title);
+		article.setUserName(userName);
+		article.setContent(content);
+		
+		int updateResult = dao.modifyArticle(article);
 		
 		return (updateResult > 0) ? true : false;
 	}
@@ -104,10 +117,10 @@ public class ArticleService {
 	/**
 	 * 글 삭제
 	 * @param idx
-	 * @param articlePw
+	 * @param password
 	 * @return boolean
 	 */
-	public boolean deleteArticle(Integer idx, String articlePw) {
+	public boolean deleteArticle(Integer idx, String password) {
 		
 		int deleteResult = dao.deleteArticle(idx);
 		
@@ -117,15 +130,16 @@ public class ArticleService {
 	/**
 	 * 비밀번호 확인
 	 * @param idx
-	 * @param articlePw
+	 * @param password
 	 * @return boolean
 	 */
-	public boolean isCorrectPassword(Integer idx, String articlePw) {
+	public boolean isCorrectPassword(Integer idx, String password) {
 		Assert.notNull(idx, "'idx' parameter is required.");
-		Assert.notNull(articlePw, "'articlePw' parameter is required.");
-
+		Assert.notNull(password, "'password' parameter is required.");
+		
 		String originPassword = dao.checkPassword(idx);
-		return articlePw.equals(originPassword);
+		
+		return password.equals(originPassword);
 	}
 
 }
