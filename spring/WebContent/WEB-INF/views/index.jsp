@@ -22,12 +22,12 @@
 				<td>이름</td>
 				<td>작성일</td>
 			</tr>
-			<c:forEach var="list" items="${articles }">
+			<c:forEach var="articles" items="${articles }">
 				<tr>
-					<td><c:out value="${list.idx}"/></td>
-					<td><a href="${contextPath}/get_article_detail?idx=${list.idx}"><c:out value="${list.title}"/></a></td>
-					<td><c:out value="${list.userName}"/></td>
-					<td><fmt:formatDate value="${list.created }" pattern="yyyy-MM-dd HH:mm"/></td>
+					<td><c:out value="${articles.idx}"/></td>
+					<td><a href="${contextPath}/article?idx=${articles.idx}"><c:out value="${articles.title}"/></a></td>
+					<td><c:out value="${articles.userName}"/></td>
+					<td><fmt:formatDate value="${articles.created }" pattern="yyyy-MM-dd HH:mm"/></td>
 				</tr>
 			</c:forEach>	
 		</table>

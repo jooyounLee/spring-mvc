@@ -13,7 +13,7 @@
 		<parameter property="idx"/>
 	</parameterMap>
 	
-	<select id="getListCount" resultType="int">
+	<select id="selectCount" resultType="int">
 	  	SELECT 
 	  		COUNT(idx) 
 	  	  FROM 
@@ -22,7 +22,7 @@
 	  	 	deleted = 0
 	</select>
   
-	<select id="getArticleList" parameterType="map" resultMap="articleMap">
+	<select id="selectArticles" parameterType="map" resultMap="articleMap">
 	  	SELECT 
 	  		idx, 
 	  		user_nm, 
@@ -40,7 +40,7 @@
 	  	 	LIMIT #{firstPost}, #{countPostPerPage}
 	</select>
 
-	<select id="getArticleDetail" resultMap="articleMap">
+	<select id="selectArticle" resultMap="articleMap">
 		SELECT 
 			user_nm, 
 			article_pw, 
@@ -53,7 +53,7 @@
 		 	idx = #{idx}
 	</select>  
 
-	<insert id="createArticle" parameterMap="articleParamMap">
+	<insert id="insertArticle" parameterMap="articleParamMap">
 		INSERT INTO BOARD (
 					user_nm, 
 					article_pw, 
@@ -71,7 +71,7 @@
 				)
 	</insert>
 	
-	<update id="modifyArticle" parameterMap="articleParamMap">
+	<update id="updateArticle" parameterMap="articleParamMap">
 		UPDATE 
 			BOARD 
 		   SET 
@@ -92,7 +92,7 @@
 		 	idx = #{idx}
 	</update>
 	
-	<select id="checkPassword" parameterType="map" resultType="String">
+	<select id="selectPassword" parameterType="map" resultType="String">
 		SELECT 
 			article_pw 
 		  FROM 

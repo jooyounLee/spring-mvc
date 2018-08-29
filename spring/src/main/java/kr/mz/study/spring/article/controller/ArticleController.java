@@ -4,103 +4,83 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
-import org.apache.ibatis.session.SqlSession;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import kr.mz.study.spring.article.dao.ArticleDAO;
 import kr.mz.study.spring.article.model.Article;
 import kr.mz.study.spring.article.service.ArticleService;
+import kr.mz.study.spring.exception.ArticleNotFoundException;
+import kr.mz.study.spring.exception.PageNotFoundException;
 
 @Controller
 public class ArticleController {
 	
-	private Logger logger=LoggerFactory.getLogger(ArticleController.class);
-	
 	@Resource(name="articleService")
 	private ArticleService articleService;
-
 	
-	@RequestMapping("/get_articles")
-	public ModelAndView getArticles(@RequestParam(value="page", required=false) Integer pageParam) {
+	/**
+	 * 게시판 리스트 select
+	 * @param pageParam
+	 * @return ModelAndView
+	 * @throws PageNotFoundException 
+	 */
+	@RequestMapping(value="/articles")
+	public ModelAndView selectArticles(@RequestParam(value="page", required=false) Integer pageParam) throws PageNotFoundException{
 		
 		ModelAndView mv = new ModelAndView("index");
 		
-		Map<String, Object> articles = articleService.getArticles(pageParam);
+		Map<String, Object> articles = articleService.selectArticles(pageParam);
 		mv.addObject("articles", articles.get("articles"));
 		mv.addObject("totalPostCount", articles.get("totalPostCount"));
 		mv.addObject("countPostPerPage", articles.get("countPostPerPage"));
 		mv.addObject("selectPageNum", articles.get("selectPageNum"));
 		
-		logger.info("result :{}", articles.toString());
-		
 		return mv;
 	}
 	
-	@RequestMapping("/get_article_detail") 
-	public ModelAndView getArticleDetail(Integer idx) {
+	/**
+	 * 게시글 상세 select
+	 * @param idx
+	 * @return ModelAndView
+	 * @throws ArticleNotFoundException 
+	 */
+	@RequestMapping(value="/article", method=RequestMethod.GET) 
+	public ModelAndView select(Integer idx) throws ArticleNotFoundException {
 		
 		ModelAndView mv = new ModelAndView("readForm");
 		
-		Article article = articleService.getArticleDetail(idx);
+		Article article = articleService.selectArticle(idx);
 		mv.addObject("articleRead", article);
 		
 		return mv;
 	}
 	
-	@RequestMapping("/form") 
+	/**
+	 * 글쓰기 폼 이동
+	 * @return /form.jsp
+	 */
+	@RequestMapping(value="/form") 
 	public String writeForm() {
 		return "form";
 	}
 	
-	@RequestMapping("/update_form")
-	public ModelAndView updateForm(Integer idx) {
+	/**
+	 * 글수정 폼 이동
+	 * @param idx
+	 * @return ModelAndView
+	 * @throws ArticleNotFoundException 
+	 */
+	@RequestMapping(value="/form/update")
+	public ModelAndView updateForm(Integer idx) throws ArticleNotFoundException {
 		
 		ModelAndView mv = new ModelAndView("form");
 		
-		Article article = articleService.getArticleDetail(idx);
+		Article article = articleService.selectArticle(idx);
 		mv.addObject("articleUpdate", article);
 		
 		return mv;
 	}
-	
-	@RequestMapping("/article_write")
-	public @ResponseBody int writeArticle(String password, String title, String userName, String content) {
-		
-		int createResult = articleService.createArticle(password, title, userName, content);
-		
-		return createResult;
-	}
-	
-	@RequestMapping("/article_update")
-	public @ResponseBody int updateArticle(String password, String title, String userName, String content, Integer idx) {
-		
-		boolean updateResult = articleService.updateArticle(password, title, userName, content, idx);
-		
-		return (updateResult) ? 1 : 0;
-	}
-	
-	@RequestMapping("/article_delete")
-	public @ResponseBody boolean deleteArticle(Integer idx, @RequestParam("re-password") String password) {
-		
-		boolean deleteResult = articleService.deleteArticle(idx, password);
-		
-		return deleteResult;
-	}
-	
-	@RequestMapping("/check_pass")
-	public @ResponseBody boolean checkPass(Integer idx, @RequestParam("re-password") String password) {
-		
-		boolean checkPassResult = articleService.isCorrectPassword(idx, password);
-		
-		return checkPassResult;
-	}
-	
 }

@@ -6,7 +6,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<link rel="stylesheet" type="text/css" href="resources/css/common.css"/>
+<link rel="stylesheet" type="text/css" href="/resources/css/common.css"/>
 <title>MVC2 게시판 쓰기,수정 폼</title>
 </head>
 <body>

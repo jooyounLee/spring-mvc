@@ -1,7 +1,5 @@
 package kr.mz.study.spring.article.dao;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -14,78 +12,56 @@ import kr.mz.study.spring.article.model.Article;
 @Repository("articleDAO")
 public class ArticleDAO {
 	
-	// TODO : 2018.08.25  
-	// @Autowired sqlSession : get DB Connections 
-	// SqlSession.insert("namespace.id", Article) : Connect Mapper (SQL)
-	// .update .delete .selectOne .selectList
-	// Mapper -> resultType = Article / parameterType = none
-	
 	@Autowired private SqlSession sqlSession;
 	
-	public int getListCount() {
-		int count = sqlSession.selectOne("articleSql.getListCount");
+	public int selectCount() {
 		
-		return count;
+		return sqlSession.selectOne("articleSql.selectCount");
 	};
 	
 	/**
 	 * 게시판 리스트
-	 * @return ArrayList
+	 * @param firstPost
+	 * @param countPostPerPage
+	 * @return List
 	 */
-	public List<Article> getArticleList(Integer firstPost, Integer countPostPerPage){
+	public List<Article> selectArticles(Map<String, Object> pageInfo){
 		
-		List<Article> articles = new ArrayList<>();
-		Map<String, Object> limits = new HashMap<>();
-		
-		limits.put("firstPost", firstPost);
-		limits.put("countPostPerPage", countPostPerPage);
-		
-		articles = sqlSession.selectList("articleSql.getArticleList", limits);
-		
-		return articles;
+		return sqlSession.selectList("articleSql.selectArticles", pageInfo);
 	};
 	
 	/**
 	 * 게시판 글상세보기
 	 * @param idx
-	 * @return DTO
+	 * @return Article
 	 */
-	public Article getArticleDetail(Integer idx) {
-		Article article = new Article();
+	public Article selectArticle(Integer idx) {
 		
-		article = sqlSession.selectOne("articleSql.getArticleDetail", idx);
-		return article;
+		return sqlSession.selectOne("articleSql.selectArticle", idx);
 	};
 	
 	/**
 	 * 게시판 글쓰기
-	 * @param title
-	 * @param userName
-	 * @param content
+	 * @param Article
 	 * @return int
 	 */
-	public int createArticle(Article article) {
+	public int insertArticle(Article article) {
 		
-		int createResult = sqlSession.insert("articleSql.createArticle", article);
-		return createResult;
+		return sqlSession.insert("articleSql.insertArticle", article);
 	};
 	
 	/**
 	 * 게시글 수정
-	 * @param userName
-	 * @param title
-	 * @param content
-	 * @param idx
+	 * @param Article
 	 * @return int
 	 */
-	public int modifyArticle(Article article) {
+	public int updateArticle(Article article) {
 		
-		int modifyResult = sqlSession.update("articleSql.modifyArticle", article);
-		return modifyResult;
+		return sqlSession.update("articleSql.updateArticle", article);
 	};
 	
 	/**
-	 * 게시글 삭제(deleted:1로 update)
+	 * 게시글 삭제
 	 * @param idx
 	 * @return int
 	 */
@@ -98,10 +74,10 @@ public class ArticleDAO {
 	 * 비밀번호 확인
 	 * @param password
 	 * @param idx
-	 * @return int
+	 * @return String
 	 */
-	public String checkPassword(Integer idx) {
+	public String selectPassword(Integer idx) {
 	
-		return sqlSession.selectOne("articleSql.checkPassword", idx);
+		return sqlSession.selectOne("articleSql.selectPassword", idx);
 	};
 }

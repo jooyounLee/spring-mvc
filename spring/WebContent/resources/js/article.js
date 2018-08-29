@@ -28,13 +28,14 @@ $(() => {
 		
 		// 취소버튼 클릭 : 리스트로 이동
 		el.cancel_btn.on('click', () => {
-			location.href= "/spring/get_articles";
+			location.href= "/spring/articles";
 		});
 	},
 	
 	save = () => {
-			var url = (el.isNew.val() === "true") ? "/spring/article_write" : "/spring/article_update";
-			var msg = (el.isNew.val() === "true") ? "작성" : "수정";
+			var url = "/spring/article",
+				msg = (el.isNew.val() === "true") ? "작성" : "수정",
+				dataType = (el.isNew.val() === "true") ? "POST" : "PUT";
 			
 			if (el.userName.val().trim().length < 1) {
 				alert("이름을 입력해주세요.");
@@ -63,23 +64,47 @@ $(() => {
 			}
 			
 			$.ajax({
-		        type : 'POST',
+		        type : dataType,
 		        url : url,
-		        data : data,
+		        data : JSON.stringify(data),
+		        contentType : "application/json; charset=UTF-8",
+		        dataType : "json",
 		        success : (result) => {
-		        	console.log(result);
 		            if(result > 0){
 		            	alert(msg + " 성공");
-		            	location.href = "/spring/get_articles";
+		            	location.href = "/spring/articles";
 		            } else {
 		            	alert(msg + " 실패");
-		            	location.href = "/spring/get_articles";
+		            	location.href = "/spring/articles";
 		            }      
-		        },
-		        error : (xhr, status, error) => {
-		        	console.log(error);
 		        }
 		    });
+	},	
+	
+	doDelete = () => {
+		var url = "/spring/article";
+		
+		var data = {
+				'idx' : el.idx.val(),
+				'password' : el.re_password.val()
+		}
+			
+		$.ajax({
+	        type : 'DELETE',
+	        url : url,
+	        data : JSON.stringify(data),
+	        contentType : "application/json; charset=UTF-8",
+	        dataType : "json",
+	        success : (result) => {
+	            if (result === false) {
+	            	alert("삭제 실패");
+	            	location.href = "/spring/articles";
+	            } else {
+	            	alert("삭제 성공");
+	            	location.href = "/spring/articles";
+	            }
+	        }
+	    });
 	},
 	
 	checkPass = (e) => {
@@ -91,14 +116,14 @@ $(() => {
 		
 		var data = {
 				'idx' : el.idx.val(),
-				're-password' : el.re_password.val()
+				'password' : el.re_password.val()
 		}
 		
-		var url = "/spring/check_pass";
+		var url = "/spring/password";
 		var whenSuccess = (e.target.name.trim() === "btn-modify") ? true : false;
-		
+		console.log(data);
 		$.ajax({
-	        type : 'POST',
+	        type : 'GET',
 	        url : url,
 	        data : data,
 	        success : (result) => {
@@ -108,34 +133,10 @@ $(() => {
 	            	el.re_password.focus();
 	            } else {
 	            	if (whenSuccess) {
-	            		location.href = "/spring/update_form?idx=" + el.idx.val();
+	            		location.href = "/spring/form/update?idx=" + el.idx.val();
 	            	} else {
 	            		 doDelete();
 	            	}
-	            }
-	        }
-	    });
-	},
-	
-	doDelete = () => {
-		var url = "/spring/article_delete";
-		
-		var data = {
-				'idx' : el.idx.val(),
-				're-password' : el.re_password.val()
-		}
-			
-		$.ajax({
-	        type : 'POST',
-	        url : url,
-	        data : data,
-	        success : (result) => {
-	            if (result === false) {
-	            	alert("삭제 실패");
-	            	location.href = "/spring/get_articles";
-	            } else {
-	            	alert("삭제 성공");
-	            	location.href = "/spring/get_articles";
 	            }
 	        }
 	    });

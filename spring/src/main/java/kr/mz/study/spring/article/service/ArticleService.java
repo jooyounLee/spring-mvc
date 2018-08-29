@@ -11,24 +11,26 @@ import org.springframework.util.Assert;
 
 import kr.mz.study.spring.article.dao.ArticleDAO;
 import kr.mz.study.spring.article.model.Article;
+import kr.mz.study.spring.exception.ArticleNotFoundException;
+import kr.mz.study.spring.exception.PageNotFoundException;
 
 @Service("articleService")
 public class ArticleService {
 
 	@Resource(name = "articleDAO")
 	private ArticleDAO dao;
-
 	
 	
 	/**
 	 * 리스트 get
 	 * @param pageParam
 	 * @return Map
+	 * @throws PageNotFoundException 
 	 */
-	public Map<String, Object> getArticles(Integer pageParam) {
+	public Map<String, Object> selectArticles(Integer pageParam) throws PageNotFoundException {
 		
 		// 전체 글 수--
-		int totalPostCount = dao.getListCount();
+		int totalPostCount = dao.selectCount();
 		
 		// 한 페이지당 글 수--
 		int countPostPerPage = 6;
@@ -45,28 +47,42 @@ public class ArticleService {
 			firstPost = 0;
 		}
 		
-		Map<String, Object> articlesAndPageinfo = new HashMap<>();
+		Map<String, Object> pageInfo = new HashMap<>();
+		pageInfo.put("firstPost", firstPost);
+		pageInfo.put("countPostPerPage", countPostPerPage);
 	
-		List<Article> articles = dao.getArticleList(firstPost, countPostPerPage);
+		List<Article> articles = dao.selectArticles(pageInfo);
 		
-		articlesAndPageinfo.put("articles", articles);
-		articlesAndPageinfo.put("totalPostCount", totalPostCount);
-		articlesAndPageinfo.put("countPostPerPage", countPostPerPage);
-		articlesAndPageinfo.put("selectPageNum", selectPageNum);
+		if(articles.size() <= 0) {
+			throw new PageNotFoundException(pageParam);
+		}
 		
-		return articlesAndPageinfo;
+		Map<String, Object> articlesAndPages = new HashMap<>();
+		articlesAndPages.put("articles", articles);
+		articlesAndPages.put("totalPostCount", totalPostCount);
+		articlesAndPages.put("countPostPerPage", countPostPerPage);
+		articlesAndPages.put("selectPageNum", selectPageNum);
+		
+		return articlesAndPages;
 	}
 	
 	/**
 	 * 글 읽기
 	 * @param idx
 	 * @return Article
+	 * @throws ArticleNotFoundException 
 	 */
-	public Article getArticleDetail(Integer idx) {
+	public Article selectArticle(Integer idx) throws ArticleNotFoundException {
 		Assert.notNull(idx, "'idx' parameter is required.");
 		
-		Article article = dao.getArticleDetail(idx);
-
+		Article article = new Article();
+		
+		article = dao.selectArticle(idx);
+		
+		if(article == null) {
+			throw new ArticleNotFoundException(idx);
+		}
+		
 		return article;
 	}
 
@@ -78,17 +94,9 @@ public class ArticleService {
 	 * @param content
 	 * @return int
 	 */
-	public int createArticle(String password, String title, String userName, String content) {
+	public int insertArticle(Article article) {
 
-		Article article = new Article();
-		article.setPassword(password);
-		article.setTitle(title);
-		article.setUserName(userName);
-		article.setContent(content);
-		
-		int createResult = dao.createArticle(article);
-
-		return createResult;
+		return dao.insertArticle(article);
 	}
 
 	/**
@@ -100,16 +108,9 @@ public class ArticleService {
 	 * @param idx
 	 * @return int
 	 */
-	public boolean updateArticle(String password, String title, String userName, String content, Integer idx) {
-		
-		Article article = new Article();
-		article.setIdx(idx);
-		article.setPassword(password);
-		article.setTitle(title);
-		article.setUserName(userName);
-		article.setContent(content);
-		
-		int updateResult = dao.modifyArticle(article);
+	public boolean updateArticle(Article article) {
+
+		int updateResult = dao.updateArticle(article);
 		
 		return (updateResult > 0) ? true : false;
 	}
@@ -120,9 +121,9 @@ public class ArticleService {
 	 * @param password
 	 * @return boolean
 	 */
-	public boolean deleteArticle(Integer idx, String password) {
+	public boolean deleteArticle(Article article) {
 		
-		int deleteResult = dao.deleteArticle(idx);
+		int deleteResult = dao.deleteArticle(article.getIdx());
 		
 		return (deleteResult > 0) ? true : false;
 	}
@@ -133,13 +134,13 @@ public class ArticleService {
 	 * @param password
 	 * @return boolean
 	 */
-	public boolean isCorrectPassword(Integer idx, String password) {
-		Assert.notNull(idx, "'idx' parameter is required.");
-		Assert.notNull(password, "'password' parameter is required.");
+	public boolean selectPassword(Article article) {
+		Assert.notNull(article.getIdx(), "'idx' parameter is required.");
+		Assert.notNull(article.getPassword(), "'password' parameter is required.");
+
+		String originPassword = dao.selectPassword(article.getIdx());
 		
-		String originPassword = dao.checkPassword(idx);
-		
-		return password.equals(originPassword);
+		return article.getPassword().equals(originPassword);
 	}
 
 }
