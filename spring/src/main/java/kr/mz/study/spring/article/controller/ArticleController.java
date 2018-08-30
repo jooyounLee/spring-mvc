@@ -5,10 +5,11 @@ import java.util.Map;
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.servlet.ModelAndView;
 
 import kr.mz.study.spring.article.model.Article;
 import kr.mz.study.spring.article.service.ArticleService;
@@ -24,63 +25,64 @@ public class ArticleController {
 	/**
 	 * 게시판 리스트 select
 	 * @param pageParam
-	 * @return ModelAndView
+	 * @return /index.jsp
 	 * @throws PageNotFoundException 
 	 */
 	@RequestMapping(value="/articles")
-	public ModelAndView selectArticles(@RequestParam(value="page", required=false) Integer pageParam) throws PageNotFoundException{
+	public String selectArticles(@RequestParam(value="page", required=false, defaultValue="1") Integer pageParam, Model model) throws PageNotFoundException{
 		
-		ModelAndView mv = new ModelAndView("index");
+		Map<String, Object> articles = articleService.findArticles(pageParam);
 		
-		Map<String, Object> articles = articleService.selectArticles(pageParam);
-		mv.addObject("articles", articles.get("articles"));
-		mv.addObject("totalPostCount", articles.get("totalPostCount"));
-		mv.addObject("countPostPerPage", articles.get("countPostPerPage"));
-		mv.addObject("selectPageNum", articles.get("selectPageNum"));
+		model.addAttribute("articles", articles.get("articles"));
+		model.addAttribute("totalPostCount", articles.get("totalPostCount"));
+		model.addAttribute("countPostPerPage", articles.get("countPostPerPage"));
+		model.addAttribute("selectPageNum", articles.get("selectPageNum"));
 		
-		return mv;
+		return "index";
 	}
 	
 	/**
 	 * 게시글 상세 select
 	 * @param idx
-	 * @return ModelAndView
+	 * @return /readForm.jsp
 	 * @throws ArticleNotFoundException 
 	 */
-	@RequestMapping(value="/article", method=RequestMethod.GET) 
-	public ModelAndView select(Integer idx) throws ArticleNotFoundException {
+	@RequestMapping(value="/article/{idx}", method=RequestMethod.GET) 
+	public String select(@PathVariable("idx") Integer idx, Model model) throws ArticleNotFoundException {
 		
-		ModelAndView mv = new ModelAndView("readForm");
+		Article article = articleService.findArticle(idx);
+		article.setIdx(idx);
+		model.addAttribute("article", article);
 		
-		Article article = articleService.selectArticle(idx);
-		mv.addObject("articleRead", article);
-		
-		return mv;
+		return "readForm";
 	}
 	
 	/**
 	 * 글쓰기 폼 이동
 	 * @return /form.jsp
 	 */
-	@RequestMapping(value="/form") 
-	public String writeForm() {
+	@RequestMapping(value="/article/save", method=RequestMethod.GET) 
+	public String writeForm(Model model) {
+		
+		model.addAttribute("article", new Article());
 		return "form";
 	}
 	
 	/**
 	 * 글수정 폼 이동
 	 * @param idx
-	 * @return ModelAndView
+	 * @return /form.jsp
 	 * @throws ArticleNotFoundException 
 	 */
-	@RequestMapping(value="/form/update")
-	public ModelAndView updateForm(Integer idx) throws ArticleNotFoundException {
+	@RequestMapping(value="/article/save/{idx}", method=RequestMethod.GET)
+	public String updateForm(@PathVariable("idx") Integer idx, Model model) throws ArticleNotFoundException {
+
+		Article article = articleService.findArticle(idx);
+		article.setIdx(idx);
+		model.addAttribute("article", article);
 		
-		ModelAndView mv = new ModelAndView("form");
-		
-		Article article = articleService.selectArticle(idx);
-		mv.addObject("articleUpdate", article);
-		
-		return mv;
+		return "form";
 	}
+	
+
 }

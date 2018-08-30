@@ -10,13 +10,13 @@ import org.springframework.stereotype.Repository;
 import kr.mz.study.spring.article.model.Article;
 
 @Repository("articleDAO")
-public class ArticleDAO {
+public class ArticleRepository {
 	
 	@Autowired private SqlSession sqlSession;
 	
 	public int selectCount() {
 		
-		return sqlSession.selectOne("articleSql.selectCount");
+		return sqlSession.selectOne("article.selectCount");
 	};
 	
 	/**
@@ -27,7 +27,7 @@ public class ArticleDAO {
 	 */
 	public List<Article> selectArticles(Map<String, Object> pageInfo){
 		
-		return sqlSession.selectList("articleSql.selectArticles", pageInfo);
+		return sqlSession.selectList("article.selectArticles", pageInfo);
 	};
 	
 	/**
@@ -35,9 +35,9 @@ public class ArticleDAO {
 	 * @param idx
 	 * @return Article
 	 */
-	public Article selectArticle(Integer idx) {
+	public Article select(Integer idx) {
 		
-		return sqlSession.selectOne("articleSql.selectArticle", idx);
+		return sqlSession.selectOne("article.select", idx);
 	};
 	
 	/**
@@ -45,9 +45,9 @@ public class ArticleDAO {
 	 * @param Article
 	 * @return int
 	 */
-	public int insertArticle(Article article) {
+	public int insert(Article article) {
 		
-		return sqlSession.insert("articleSql.insertArticle", article);
+		return sqlSession.insert("article.insert", article);
 	};
 	
 	/**
@@ -55,9 +55,9 @@ public class ArticleDAO {
 	 * @param Article
 	 * @return int
 	 */
-	public int updateArticle(Article article) {
+	public int update(Article article) {
 		
-		return sqlSession.update("articleSql.updateArticle", article);
+		return sqlSession.update("article.update", article);
 	};
 	
 	/**
@@ -65,9 +65,9 @@ public class ArticleDAO {
 	 * @param idx
 	 * @return int
 	 */
-	public int deleteArticle(Integer idx) {
-		
-		return sqlSession.update("articleSql.deleteArticle", idx);
+	public int delete(Article article) {
+	
+		return sqlSession.update("article.delete", article);
 	};
 	
 	/**
@@ -78,6 +78,6 @@ public class ArticleDAO {
 	 */
 	public String selectPassword(Integer idx) {
 	
-		return sqlSession.selectOne("articleSql.selectPassword", idx);
+		return sqlSession.selectOne("article.selectPassword", idx);
 	};
 }

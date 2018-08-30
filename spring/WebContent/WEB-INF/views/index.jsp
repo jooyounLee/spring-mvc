@@ -9,7 +9,7 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<link rel="stylesheet" type="text/css" href="resources/css/common.css"/>
+<link rel="stylesheet" type="text/css" href="<c:url value="/resources/css/common.css" />"/>
 <title>MVC2 게시판 리스트</title>
 </head>
 <body>
@@ -25,7 +25,7 @@
 			<c:forEach var="articles" items="${articles }">
 				<tr>
 					<td><c:out value="${articles.idx}"/></td>
-					<td><a href="${contextPath}/article?idx=${articles.idx}"><c:out value="${articles.title}"/></a></td>
+					<td><a href="${contextPath}/article/${articles.idx}"><c:out value="${articles.title}"/></a></td>
 					<td><c:out value="${articles.userName}"/></td>
 					<td><fmt:formatDate value="${articles.created }" pattern="yyyy-MM-dd HH:mm"/></td>
 				</tr>
@@ -33,7 +33,8 @@
 		</table>
 		
 		<div>
-			<a href="${contextPath}/form?idx:isnull=true&isNew=true">글쓰기</a>
+			<a href="${contextPath}/article/save">글쓰기</a>
+<%-- 			<a href="${contextPath}/form?idx:isnull=true&isNew=true">글쓰기</a> --%>
 		</div>
 		
 		<div id="page-box">

@@ -9,16 +9,19 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
-import kr.mz.study.spring.article.dao.ArticleDAO;
+import kr.mz.study.spring.article.dao.ArticleRepository;
 import kr.mz.study.spring.article.model.Article;
 import kr.mz.study.spring.exception.ArticleNotFoundException;
+import kr.mz.study.spring.exception.DeleteFailedException;
+import kr.mz.study.spring.exception.InsertFailedException;
 import kr.mz.study.spring.exception.PageNotFoundException;
+import kr.mz.study.spring.exception.UpdateFailedException;
 
 @Service("articleService")
 public class ArticleService {
 
 	@Resource(name = "articleDAO")
-	private ArticleDAO dao;
+	private ArticleRepository dao;
 	
 	
 	/**
@@ -27,7 +30,7 @@ public class ArticleService {
 	 * @return Map
 	 * @throws PageNotFoundException 
 	 */
-	public Map<String, Object> selectArticles(Integer pageParam) throws PageNotFoundException {
+	public Map<String, Object> findArticles(Integer pageParam) throws PageNotFoundException {
 		
 		// 전체 글 수--
 		int totalPostCount = dao.selectCount();
@@ -72,12 +75,10 @@ public class ArticleService {
 	 * @return Article
 	 * @throws ArticleNotFoundException 
 	 */
-	public Article selectArticle(Integer idx) throws ArticleNotFoundException {
+	public Article findArticle(Integer idx) throws ArticleNotFoundException {
 		Assert.notNull(idx, "'idx' parameter is required.");
-		
-		Article article = new Article();
-		
-		article = dao.selectArticle(idx);
+
+		Article article = dao.select(idx);
 		
 		if(article == null) {
 			throw new ArticleNotFoundException(idx);
@@ -87,32 +88,37 @@ public class ArticleService {
 	}
 
 	/**
-	 * 글 작성
-	 * @param password
-	 * @param title
-	 * @param userName
-	 * @param content
+	 * 글 저장
+	 * @param article
 	 * @return int
+	 * @throws InsertFailedException 
 	 */
-	public int insertArticle(Article article) {
+	public int save(Article article) throws InsertFailedException {
 
-		return dao.insertArticle(article);
+		int insertResult = dao.insert(article);
+
+		if(insertResult < 1) {
+			throw new InsertFailedException();
+		}
+		
+		return insertResult;
 	}
 
 	/**
 	 * 글 수정
-	 * @param password
-	 * @param title
-	 * @param userName
-	 * @param content
-	 * @param idx
+	 * @param article
 	 * @return int
+	 * @throws InsertFailedException 
 	 */
-	public boolean updateArticle(Article article) {
+	public int update(Article article) throws UpdateFailedException {
 
-		int updateResult = dao.updateArticle(article);
+		int updateResult = dao.update(article);
+
+		if(updateResult < 1) {
+			throw new UpdateFailedException();
+		}
 		
-		return (updateResult > 0) ? true : false;
+		return updateResult;
 	}
 	
 	/**
@@ -120,12 +126,17 @@ public class ArticleService {
 	 * @param idx
 	 * @param password
 	 * @return boolean
+	 * @throws DeleteFailedException 
 	 */
-	public boolean deleteArticle(Article article) {
+	public int delete(Article article) throws DeleteFailedException {
+	
+		int deleteResult = dao.delete(article);
+
+		if(deleteResult < 1) {
+			throw new DeleteFailedException();
+		}
 		
-		int deleteResult = dao.deleteArticle(article.getIdx());
-		
-		return (deleteResult > 0) ? true : false;
+		return deleteResult;
 	}
 	
 	/**

@@ -3,6 +3,8 @@
 $(() => {
 
 	var el = {
+			form : $("#article"),
+			articleForm : $("#articleForm"),
 			idx : $("input[name='idx']"),
 			userName : $("input[name='userName']"),
 			password : $("input[name='password']"),
@@ -33,9 +35,6 @@ $(() => {
 	},
 	
 	save = () => {
-			var url = "/spring/article",
-				msg = (el.isNew.val() === "true") ? "작성" : "수정",
-				dataType = (el.isNew.val() === "true") ? "POST" : "PUT";
 			
 			if (el.userName.val().trim().length < 1) {
 				alert("이름을 입력해주세요.");
@@ -55,26 +54,18 @@ $(() => {
 				return;
 			}
 			
-			var data = {
-					'idx' : el.idx.val(),
-					'userName' : el.userName.val(),
-					'password' : el.password.val(),
-					'title' : el.title.val(),
-					'content' : el.content.val()
-			}
+			var url = "/spring/article";
 			
 			$.ajax({
-		        type : dataType,
+		        type : 'POST',
 		        url : url,
-		        data : JSON.stringify(data),
-		        contentType : "application/json; charset=UTF-8",
-		        dataType : "json",
+		        data : el.articleForm.serialize(),
 		        success : (result) => {
 		            if(result > 0){
-		            	alert(msg + " 성공");
+		            	alert("저장 성공");
 		            	location.href = "/spring/articles";
 		            } else {
-		            	alert(msg + " 실패");
+		            	alert("저장 실패");
 		            	location.href = "/spring/articles";
 		            }      
 		        }
@@ -82,19 +73,12 @@ $(() => {
 	},	
 	
 	doDelete = () => {
-		var url = "/spring/article";
-		
-		var data = {
-				'idx' : el.idx.val(),
-				'password' : el.re_password.val()
-		}
-			
+		var url = "/spring/article/delete";
+
 		$.ajax({
-	        type : 'DELETE',
+	        type : 'POST',
 	        url : url,
-	        data : JSON.stringify(data),
-	        contentType : "application/json; charset=UTF-8",
-	        dataType : "json",
+	        data : el.form.serialize(),
 	        success : (result) => {
 	            if (result === false) {
 	            	alert("삭제 실패");
@@ -108,6 +92,7 @@ $(() => {
 	},
 	
 	checkPass = (e) => {
+
 		if (el.re_password.val().trim().length < 1) {
 			alert("비밀번호를 입력해주세요.");
 			el.re_password.focus();
@@ -121,21 +106,22 @@ $(() => {
 		
 		var url = "/spring/password";
 		var whenSuccess = (e.target.name.trim() === "btn-modify") ? true : false;
-		console.log(data);
+
 		$.ajax({
 	        type : 'GET',
 	        url : url,
 	        data : data,
 	        success : (result) => {
+	        	
 	            if(result === false) {
 	            	alert("비밀번호를 확인해주세요.");
 	            	el.re_password.val("");
 	            	el.re_password.focus();
 	            } else {
 	            	if (whenSuccess) {
-	            		location.href = "/spring/form/update?idx=" + el.idx.val();
+	            		location.href = "/spring/article/save/" + el.idx.val();
 	            	} else {
-	            		 doDelete();
+	            		doDelete();
 	            	}
 	            }
 	        }

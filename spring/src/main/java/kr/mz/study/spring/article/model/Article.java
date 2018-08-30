@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class Article {
 	
-	private int idx;
+	private Integer idx;
 	
 	private String userName;
 	
@@ -18,7 +18,7 @@ public class Article {
 	
 	public Article() {}
 	
-	public Article(int idx, String userName, String password, String title, String content, Date created) {
+	public Article(Integer idx, String userName, String password, String title, String content, Date created) {
 		super();
 		this.idx = idx;
 		this.userName = userName;
@@ -28,11 +28,11 @@ public class Article {
 		this.created = created;
 	}
 
-	public int getIdx() {
+	public Integer getIdx() {
 		return idx;
 	}
 
-	public void setIdx(int idx) {
+	public void setIdx(Integer idx) {
 		this.idx = idx;
 	}
 

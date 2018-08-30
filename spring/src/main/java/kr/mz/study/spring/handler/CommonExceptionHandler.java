@@ -1,4 +1,4 @@
-package kr.mz.study.spring.exception;
+package kr.mz.study.spring.handler;
 
 
 import javax.servlet.http.HttpServletRequest;
@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
 
 @ControllerAdvice
-public class CommonExceptionAdvice {
+public class CommonExceptionHandler {
 
-	private static final Logger logger = LoggerFactory.getLogger(CommonExceptionAdvice.class);
+	private static final Logger logger = LoggerFactory.getLogger(CommonExceptionHandler.class);
 	
 	@ExceptionHandler(Exception.class)
 	public ModelAndView commonException(HttpServletRequest request, Exception e) {

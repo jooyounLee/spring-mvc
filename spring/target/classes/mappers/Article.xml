@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+<mapper namespace="article">
+
+	<resultMap type="kr.mz.study.spring.article.model.Article" id="articleMap">
+		<result property="userName" column="user_nm"/>
+		<result property="password" column="article_pw"/>
+	</resultMap>
+	
+	<select id="selectCount" resultType="int">
+	  	SELECT 
+	  		COUNT(idx) 
+	  	  FROM BOARD 
+	  	 WHERE deleted = 0
+	</select>
+  
+	<select id="selectArticles" resultMap="articleMap">
+	  	SELECT 
+	  		idx 
+	  		, user_nm 
+	  		, article_pw 
+	  		, title
+	  		, content 
+	  		, created
+		  FROM BOARD 
+		 WHERE deleted = 0 
+	  	 ORDER BY idx DESC 
+	  	 LIMIT #{firstPost}, #{countPostPerPage}
+	</select>
+
+	<select id="select" resultMap="articleMap">
+		SELECT 
+			user_nm 
+			, article_pw 
+			, title
+			, content
+			, created 
+		 FROM BOARD 
+		 WHERE idx = #{idx}
+	</select>  
+
+	<insert id="insert" >
+		INSERT INTO BOARD (
+					user_nm
+					, article_pw 
+					, title 
+					, content
+					, created 
+					, deleted
+				) VALUES (
+					#{userName} 
+					, #{password} 
+					, #{title}
+					, #{content} 
+					, NOW()
+					, 0
+				)
+	</insert>
+	
+	<update id="update" >
+		UPDATE BOARD SET 
+		   	user_nm = #{userName}
+		   	, article_pw = #{password}
+		   	, title = #{title}
+		   	, content = #{content} 
+		 WHERE idx = #{idx}
+	</update>
+	
+	<update id="delete">
+		UPDATE BOARD SET 
+		   	deleted = 1
+		 WHERE idx = #{idx}
+	</update>
+	
+	<select id="selectPassword" resultType="String">
+		SELECT 
+			article_pw 
+		  FROM BOARD 
+		 WHERE idx = #{idx}
+	</select>
+	
+</mapper>
+		
+	
