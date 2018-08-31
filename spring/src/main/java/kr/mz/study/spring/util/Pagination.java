@@ -6,6 +6,10 @@ import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.SimpleTagSupport;
 
 public class Pagination extends SimpleTagSupport {
+	
+	private Integer offset;
+	
+	private Integer limit;
 
 	private Integer totalPostCount;
 	
@@ -31,6 +35,22 @@ public class Pagination extends SimpleTagSupport {
 	
 	private String pageParamName = "page";
 	
+	public Integer getOffset() {
+		return offset;
+	}
+
+	public void setOffset(Integer offset) {
+		this.offset = offset;
+	}
+
+	public Integer getLimit() {
+		return limit;
+	}
+
+	public void setLimit(Integer limit) {
+		this.limit = limit;
+	}
+
 	public String getPageParamName() {
 		return pageParamName;
 	}
@@ -129,6 +149,16 @@ public class Pagination extends SimpleTagSupport {
 	@Override
 	public void doTag() throws JspException, IOException {
 		JspWriter out = getJspContext().getOut();
+		
+		if(selectPageNum == null || selectPageNum < 1) {
+			selectPageNum = 1;
+		}
+		if(offset == null || offset < 0) {
+			offset = 0;
+		}
+		if(limit == null || limit < 0) {
+			limit = countPostPerPage;
+		}
 
 		// 총 페이지수
 		double totalPage = Math.ceil((double)totalPostCount / (double)countPostPerPage);
@@ -159,32 +189,39 @@ public class Pagination extends SimpleTagSupport {
 		
 		// 다음 페이지
 		pageNext = lastPage + 1;
-
+		
+		limit = countPostPerPage;
+		
 		// 페이지 버튼 print
 		if(selectPageNum > 1) {
-			out.write("<a href=\"?" + pageParamName + "=1\"> << </a>");
+			offset = limit * (1 - 1);
+			out.write("<a href=\"?offset=" + offset + "&limit=" + limit + "&" + pageParamName + "=1\"> << </a>");
 		} else {
 			out.write("<span> << </span>");
 		}
 		if(firstPage > 1) {
-			out.write("<a href=\"?" + pageParamName + "=" +pagePrev+ " \"> 이전 </a>");
+			offset = limit * (pagePrev - 1);
+			out.write("<a href=\"?offset=" + offset + "&limit=" + limit + "&" + pageParamName + "=" +pagePrev+ " \"> 이전 </a>");
 		} else {
 			out.write("<span> 이전 </span>");
 		}
 		
 		for(int i = firstPage; i <= lastPage; i++) {
 			String style = (i == selectPageNum) ? " style=\"font-size:20px;font-weight:bold;\"" : "";
-
-			out.write("<a href=\"?" + pageParamName + "=" +i+ "\"" + style + "> " + i + " </a>");						
+			
+			offset = limit * (i - 1);
+			out.write("<a href=\"?offset=" + offset + "&limit=" + limit + "&" + pageParamName + "=" +i+ "\"" + style + "> " + i + " </a>");
 		}
 
 		if(lastPage < totalPageCount) {
-			out.write("<a href=\"?" + pageParamName + "=" +pageNext+ " \"> 다음 </a>");
+			offset = limit * (pageNext - 1);
+			out.write("<a href=\"?offset=" + offset + "&limit=" + limit + "&" + pageParamName + "=" +pageNext+ " \"> 다음 </a>");
 		} else {
 			out.write("<span> 다음 </span>");
 		}
 		if(selectPageNum < totalPageCount) {
-			out.write("<a href=\"?" + pageParamName + "=" +totalPageCount+ " \"> >> </a>");
+			offset = limit * (totalPageCount - 1);
+			out.write("<a href=\"?offset=" + offset + "&limit=" + limit + "&" + pageParamName + "=" +totalPageCount+ " \"> >> </a>");
 		} else {
 			out.write("<span> >> </span>");	
 		}

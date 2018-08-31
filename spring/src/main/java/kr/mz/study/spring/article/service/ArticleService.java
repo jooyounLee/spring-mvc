@@ -30,44 +30,21 @@ public class ArticleService {
 	 * @return Map
 	 * @throws PageNotFoundException 
 	 */
-	public Map<String, Object> findArticles(Integer pageParam) throws PageNotFoundException {
-		
-		// 전체 글 수--
-		int totalPostCount = dao.selectCount();
-		
-		// 한 페이지당 글 수--
-		int countPostPerPage = 6;
-		
-		// page parameter
-		int selectPageNum = 1;
-		if(pageParam != null) {
-			selectPageNum = pageParam;
-		}	
-		
-		// 페이지 첫번째 글
-		int firstPost = countPostPerPage * (selectPageNum - 1);
-		if(firstPost < 0) {
-			firstPost = 0;
-		}
+	public List<Article> findArticles(Integer offset, Integer limit) throws PageNotFoundException {
 		
 		Map<String, Object> pageInfo = new HashMap<>();
-		pageInfo.put("firstPost", firstPost);
-		pageInfo.put("countPostPerPage", countPostPerPage);
+		pageInfo.put("firstPost", offset);
+		pageInfo.put("countPostPerPage", limit);
 	
 		List<Article> articles = dao.selectArticles(pageInfo);
 		
 		if(articles.size() <= 0) {
-			throw new PageNotFoundException(pageParam);
+			throw new PageNotFoundException(offset);
 		}
 		
-		Map<String, Object> articlesAndPages = new HashMap<>();
-		articlesAndPages.put("articles", articles);
-		articlesAndPages.put("totalPostCount", totalPostCount);
-		articlesAndPages.put("countPostPerPage", countPostPerPage);
-		articlesAndPages.put("selectPageNum", selectPageNum);
-		
-		return articlesAndPages;
+		return articles;
 	}
+	
 	
 	/**
 	 * 글 읽기

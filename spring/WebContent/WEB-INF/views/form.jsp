@@ -42,6 +42,7 @@
 	</div>
 	
 <script src="//code.jquery.com/jquery-latest.min.js"></script>
-<script src="${pageContext.request.contextPath}/resources/js/article.js"></script>
+<script src="<c:url value="/resources/js/article.js"/>"></script>
+
 </body>
 </html>

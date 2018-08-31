@@ -11,17 +11,17 @@
         <body-content>empty</body-content>
         <attribute>
 			<name>selectPageNum</name>
-			<required>true</required>
+			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute> 
 		<attribute>
 			<name>totalPostCount</name>
-			<required>true</required>
+			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>
 			<name>countPostPerPage</name>
-			<required>true</required>
+			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
 		<attribute>

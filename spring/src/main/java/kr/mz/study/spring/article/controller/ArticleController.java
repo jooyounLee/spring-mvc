@@ -1,7 +1,5 @@
 package kr.mz.study.spring.article.controller;
 
-import java.util.Map;
-
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Controller;
@@ -11,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import kr.mz.study.spring.article.dao.ArticleRepository;
 import kr.mz.study.spring.article.model.Article;
 import kr.mz.study.spring.article.service.ArticleService;
 import kr.mz.study.spring.exception.ArticleNotFoundException;
@@ -21,6 +20,8 @@ public class ArticleController {
 	
 	@Resource(name="articleService")
 	private ArticleService articleService;
+	@Resource(name = "articleDAO")
+	private ArticleRepository dao;
 	
 	/**
 	 * 게시판 리스트 select
@@ -29,14 +30,12 @@ public class ArticleController {
 	 * @throws PageNotFoundException 
 	 */
 	@RequestMapping(value="/articles")
-	public String selectArticles(@RequestParam(value="page", required=false, defaultValue="1") Integer pageParam, Model model) throws PageNotFoundException{
+	public String selectArticles(@RequestParam(value="offset", required=false, defaultValue="0") int offset
+								, @RequestParam(value="limit", required=false, defaultValue="10") int limit
+								, Model model) throws PageNotFoundException{
 		
-		Map<String, Object> articles = articleService.findArticles(pageParam);
-		
-		model.addAttribute("articles", articles.get("articles"));
-		model.addAttribute("totalPostCount", articles.get("totalPostCount"));
-		model.addAttribute("countPostPerPage", articles.get("countPostPerPage"));
-		model.addAttribute("selectPageNum", articles.get("selectPageNum"));
+		model.addAttribute("articles", articleService.findArticles(offset, limit));
+		model.addAttribute("totalPostCount", dao.selectCount());
 		
 		return "index";
 	}

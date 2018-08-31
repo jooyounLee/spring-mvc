@@ -32,6 +32,7 @@ $(() => {
 		el.cancel_btn.on('click', () => {
 			location.href= "/spring/articles";
 		});
+		
 	},
 	
 	save = () => {

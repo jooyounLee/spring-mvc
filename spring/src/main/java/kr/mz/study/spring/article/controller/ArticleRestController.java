@@ -24,12 +24,11 @@ public class ArticleRestController {
 	 * 글 저장 (새글, 수정)
 	 * @param article
 	 * @return int
-	 * @throws InsertFailedException 
 	 */
 	@RequestMapping(value="/article", method=RequestMethod.POST)
 	public int save(@ModelAttribute Article article) {
 		int result = 0;
-System.err.println(article.getIdx());
+
 		if(article.getIdx() != null) {
 			try {
 				result = articleService.update(article);
@@ -46,29 +45,7 @@ System.err.println(article.getIdx());
 		
 		return result; 
 	}
-	
-	/**
-	 * insert
-	 * @param Article
-	 * @return Article
-	 * @throws InsertFailedException 
-	 */
-	/*public int insert(@RequestBody Article article) throws InsertFailedException {
-		
-		return articleService.save(article);
-	}*/
-	
-	/**
-	 * update
-	 * @param article
-	 * @return int
-	 * @throws InsertFailedException 
-	 */
-	/*public int update(@RequestBody Article article) throws InsertFailedException {
-		
-		return articleService.update(article);
-	}*/
-	
+
 	/**
 	 * delete
 	 * @param article
