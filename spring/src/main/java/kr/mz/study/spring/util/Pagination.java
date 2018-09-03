@@ -207,9 +207,8 @@ public class Pagination extends SimpleTagSupport {
 		}
 		
 		for(int i = firstPage; i <= lastPage; i++) {
+			offset = limit * (i - 1);	
 			String style = (i == selectPageNum) ? " style=\"font-size:20px;font-weight:bold;\"" : "";
-			
-			offset = limit * (i - 1);
 			out.write("<a href=\"?offset=" + offset + "&limit=" + limit + "&" + pageParamName + "=" +i+ "\"" + style + "> " + i + " </a>");
 		}
 

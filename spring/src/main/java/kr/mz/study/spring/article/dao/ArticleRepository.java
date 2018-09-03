@@ -37,7 +37,7 @@ public class ArticleRepository {
 	 */
 	public Article select(Integer idx) {
 		
-		return sqlSession.selectOne("article.select", idx);
+		return sqlSession.selectOne("article.selectByIdx", idx);
 	};
 	
 	/**
@@ -67,7 +67,7 @@ public class ArticleRepository {
 	 */
 	public int delete(Article article) {
 	
-		return sqlSession.update("article.delete", article);
+		return sqlSession.update("article.deleteByIdx", article);
 	};
 	
 	/**

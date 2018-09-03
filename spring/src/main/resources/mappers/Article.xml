@@ -29,9 +29,10 @@
 	  	 LIMIT #{firstPost}, #{countPostPerPage}
 	</select>
 
-	<select id="select" resultMap="articleMap">
-		SELECT 
-			user_nm 
+	<select id="selectByIdx" resultMap="articleMap">
+		SELECT
+			idx 
+			, user_nm
 			, article_pw 
 			, title
 			, content
@@ -67,7 +68,7 @@
 		 WHERE idx = #{idx}
 	</update>
 	
-	<update id="delete">
+	<update id="deleteByIdx">
 		UPDATE BOARD SET 
 		   	deleted = 1
 		 WHERE idx = #{idx}

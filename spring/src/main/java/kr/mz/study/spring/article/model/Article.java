@@ -2,32 +2,26 @@ package kr.mz.study.spring.article.model;
 
 import java.util.Date;
 
+import javax.validation.constraints.NotNull;
+
 public class Article {
 	
 	private Integer idx;
-	
+
+	@NotNull
 	private String userName;
 	
+	@NotNull
 	private String password;
 	
+	@NotNull
 	private String title;
 	
+	@NotNull
 	private String content;
 	
 	private Date created;
 	
-	public Article() {}
-	
-	public Article(Integer idx, String userName, String password, String title, String content, Date created) {
-		super();
-		this.idx = idx;
-		this.userName = userName;
-		this.password = password;
-		this.title = title;
-		this.content = content;
-		this.created = created;
-	}
-
 	public Integer getIdx() {
 		return idx;
 	}

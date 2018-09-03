@@ -13,7 +13,7 @@
 <body>
 	<div class="write_wrap">
 		<form:form id="articleForm" method="post" modelAttribute="article">
-			<form:input path="idx"/>
+			<form:hidden path="idx"/>
 			<table>
 				<tr>
 					<td>이름</td>

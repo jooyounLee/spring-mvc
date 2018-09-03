@@ -20,6 +20,7 @@ public class ArticleController {
 	
 	@Resource(name="articleService")
 	private ArticleService articleService;
+	
 	@Resource(name = "articleDAO")
 	private ArticleRepository dao;
 	
@@ -48,11 +49,7 @@ public class ArticleController {
 	 */
 	@RequestMapping(value="/article/{idx}", method=RequestMethod.GET) 
 	public String select(@PathVariable("idx") Integer idx, Model model) throws ArticleNotFoundException {
-		
-		Article article = articleService.findArticle(idx);
-		article.setIdx(idx);
-		model.addAttribute("article", article);
-		
+		model.addAttribute("article", articleService.findArticle(idx));
 		return "readForm";
 	}
 	
@@ -62,7 +59,6 @@ public class ArticleController {
 	 */
 	@RequestMapping(value="/article/save", method=RequestMethod.GET) 
 	public String writeForm(Model model) {
-		
 		model.addAttribute("article", new Article());
 		return "form";
 	}
@@ -75,13 +71,7 @@ public class ArticleController {
 	 */
 	@RequestMapping(value="/article/save/{idx}", method=RequestMethod.GET)
 	public String updateForm(@PathVariable("idx") Integer idx, Model model) throws ArticleNotFoundException {
-
-		Article article = articleService.findArticle(idx);
-		article.setIdx(idx);
-		model.addAttribute("article", article);
-		
+		model.addAttribute("article", articleService.findArticle(idx));
 		return "form";
 	}
-	
-
 }

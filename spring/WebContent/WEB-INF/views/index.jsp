@@ -14,12 +14,6 @@
 <body>
 
 	<div class="board_wrap">
-		<select name="perPage">
-			<option>5</option>
-			<option>10</option>
-			<option>15</option>
-			<option>20</option>
-		</select>
 		<table>
 			<tr>
 				<td>No.</td>
@@ -44,7 +38,7 @@
 		<div id="page-box">
 			<jooy:paging selectPageNum="${param.page }"
 				totalPostCount="${totalPostCount}"
-				countPostPerPage="5" />
+				countPostPerPage="10" />
 		</div>
 
 	</div>

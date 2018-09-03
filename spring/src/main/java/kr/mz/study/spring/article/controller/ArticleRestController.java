@@ -1,6 +1,7 @@
 package kr.mz.study.spring.article.controller;
 
 import javax.annotation.Resource;
+import javax.validation.Valid;
 
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,14 +20,13 @@ public class ArticleRestController {
 	@Resource(name="articleService")
 	private ArticleService articleService;
 	
-	
 	/**
 	 * 글 저장 (새글, 수정)
 	 * @param article
 	 * @return int
 	 */
 	@RequestMapping(value="/article", method=RequestMethod.POST)
-	public int save(@ModelAttribute Article article) {
+	public int save(@ModelAttribute @Valid Article article) {
 		int result = 0;
 
 		if(article.getIdx() != null) {
@@ -52,7 +52,7 @@ public class ArticleRestController {
 	 * @return boolean
 	 */
 	@RequestMapping(value="/article/delete", method=RequestMethod.POST)
-	public boolean delete( @ModelAttribute Article article) {			
+	public boolean delete(@ModelAttribute Article article) {			
 		int result = 0;
 		
 		try {
@@ -71,9 +71,7 @@ public class ArticleRestController {
 	 */
 	@RequestMapping(value="/password", method=RequestMethod.GET)
 	public boolean selectPassword(Article article) {
-
 		boolean checkPassResult = articleService.selectPassword(article);
-
 		return checkPassResult;
 	}
 }
