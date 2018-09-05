@@ -4,14 +4,17 @@ import java.util.Date;
 
 import javax.validation.constraints.NotNull;
 
+import kr.mz.study.spring.article.groups.ArticleGroups;
+
 public class Article {
+	
 	
 	private Integer idx;
 
 	@NotNull
 	private String userName;
 	
-	@NotNull
+	@NotNull(groups=ArticleGroups.Password.class)
 	private String password;
 	
 	@NotNull

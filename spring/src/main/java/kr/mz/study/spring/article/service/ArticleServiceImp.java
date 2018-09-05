@@ -14,7 +14,6 @@ import kr.mz.study.spring.exception.ArticleNotFoundException;
 import kr.mz.study.spring.exception.DeleteFailedException;
 import kr.mz.study.spring.exception.InsertFailedException;
 import kr.mz.study.spring.exception.PageNotFoundException;
-import kr.mz.study.spring.exception.UpdateFailedException;
 
 @Service("articleService")
 public class ArticleServiceImp implements ArticleService{
@@ -22,6 +21,13 @@ public class ArticleServiceImp implements ArticleService{
 	@Resource(name = "articleDAO")
 	private ArticleRepository dao;
 	
+	/**
+	 * 전체 글 count
+	 */
+	@Override
+	public int findCountAll() {
+		return dao.selectCount();
+	}
 	
 	/**
 	 * 리스트 get
@@ -30,21 +36,14 @@ public class ArticleServiceImp implements ArticleService{
 	 * @throws PageNotFoundException 
 	 */
 	@Override
-	public List<Article> findArticles(Integer offset, Integer limit) throws PageNotFoundException {
+	public List<Article> findArticles(Integer offset, Integer limit){
 		Map<String, Object> pageInfo = new HashMap<>();
 		
 		pageInfo.put("firstPost", offset);
 		pageInfo.put("countPostPerPage", limit);
-	
-		List<Article> articles = dao.selectArticles(pageInfo);
 		
-		if(articles.size() <= 0) {
-			throw new PageNotFoundException(offset);
-		}
-		
-		return articles;
+		return dao.selectArticles(pageInfo);
 	}
-	
 	
 	/**
 	 * 글 읽기
@@ -53,14 +52,8 @@ public class ArticleServiceImp implements ArticleService{
 	 * @throws ArticleNotFoundException 
 	 */
 	@Override
-	public Article findArticle(Integer idx) throws ArticleNotFoundException {
-		Article article = dao.select(idx);
-		
-		if(article == null) {
-			throw new ArticleNotFoundException(idx);
-		}
-		
-		return article;
+	public Article findArticle(Integer idx){
+		return dao.select(idx);
 	}
 
 	/**
@@ -70,14 +63,8 @@ public class ArticleServiceImp implements ArticleService{
 	 * @throws InsertFailedException 
 	 */
 	@Override
-	public int save(Article article) throws InsertFailedException {
-		int insertResult = dao.insert(article);
-
-		if(insertResult < 1) {
-			throw new InsertFailedException();
-		}
-		
-		return insertResult;
+	public int save(Article article){
+		return dao.insert(article);
 	}
 
 	/**
@@ -87,14 +74,8 @@ public class ArticleServiceImp implements ArticleService{
 	 * @throws InsertFailedException 
 	 */
 	@Override
-	public int update(Article article) throws UpdateFailedException {
-		int updateResult = dao.update(article);
-
-		if(updateResult < 1) {
-			throw new UpdateFailedException();
-		}
-		
-		return updateResult;
+	public int update(Article article){
+		return dao.update(article);
 	}
 	
 	/**
@@ -105,14 +86,8 @@ public class ArticleServiceImp implements ArticleService{
 	 * @throws DeleteFailedException 
 	 */
 	@Override
-	public int delete(Article article) throws DeleteFailedException {
-		int deleteResult = dao.delete(article);
-
-		if(deleteResult < 1) {
-			throw new DeleteFailedException();
-		}
-		
-		return deleteResult;
+	public int delete(Article article){
+		return dao.delete(article);
 	}
 	
 	/**

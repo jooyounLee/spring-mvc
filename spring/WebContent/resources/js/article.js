@@ -55,10 +55,10 @@ $(() => {
 				return;
 			}
 			
-			var url = "/spring/article";
-			
+			var	url = (el.idx.val() === "") ? "/spring/article" : "/spring/article/update";
+		
 			$.ajax({
-		        type : 'POST',
+		        type : "POST",
 		        url : url,
 		        data : el.articleForm.serialize(),
 		        success : (result) => {

@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import kr.mz.study.spring.article.dao.ArticleRepository;
 import kr.mz.study.spring.article.model.Article;
 import kr.mz.study.spring.article.service.ArticleService;
 import kr.mz.study.spring.exception.ArticleNotFoundException;
@@ -21,9 +20,6 @@ public class ArticleController {
 	@Resource(name="articleService")
 	private ArticleService articleService;
 	
-	@Resource(name = "articleDAO")
-	private ArticleRepository dao;
-	
 	/**
 	 * 게시판 리스트 select
 	 * @param pageParam
@@ -34,9 +30,12 @@ public class ArticleController {
 	public String selectArticles(@RequestParam(value="offset", required=false, defaultValue="0") int offset
 								, @RequestParam(value="limit", required=false, defaultValue="10") int limit
 								, Model model) throws PageNotFoundException{
-		
-		model.addAttribute("articles", articleService.findArticles(offset, limit));
-		model.addAttribute("totalPostCount", dao.selectCount());
+		if(articleService.findArticles(offset, limit) != null) {
+			model.addAttribute("articles", articleService.findArticles(offset, limit));
+			model.addAttribute("totalPostCount", articleService.findCountAll());
+		} else {
+			throw new PageNotFoundException(offset);
+		}
 		
 		return "index";
 	}
@@ -49,7 +48,12 @@ public class ArticleController {
 	 */
 	@RequestMapping(value="/article/{idx}", method=RequestMethod.GET) 
 	public String select(@PathVariable("idx") Integer idx, Model model) throws ArticleNotFoundException {
-		model.addAttribute("article", articleService.findArticle(idx));
+		if(articleService.findArticle(idx) != null) {
+			model.addAttribute("article", articleService.findArticle(idx));
+		} else {
+			throw new ArticleNotFoundException(idx);
+		}
+		
 		return "readForm";
 	}
 	
@@ -60,6 +64,7 @@ public class ArticleController {
 	@RequestMapping(value="/article/save", method=RequestMethod.GET) 
 	public String writeForm(Model model) {
 		model.addAttribute("article", new Article());
+		
 		return "form";
 	}
 	
@@ -71,7 +76,12 @@ public class ArticleController {
 	 */
 	@RequestMapping(value="/article/save/{idx}", method=RequestMethod.GET)
 	public String updateForm(@PathVariable("idx") Integer idx, Model model) throws ArticleNotFoundException {
-		model.addAttribute("article", articleService.findArticle(idx));
+		if(articleService.findArticle(idx) != null) {
+			model.addAttribute("article", articleService.findArticle(idx));
+		} else {
+			throw new ArticleNotFoundException(idx);
+		}
+		
 		return "form";
 	}
 }

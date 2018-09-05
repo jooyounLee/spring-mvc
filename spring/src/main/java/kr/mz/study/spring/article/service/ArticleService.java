@@ -3,24 +3,21 @@ package kr.mz.study.spring.article.service;
 import java.util.List;
 
 import kr.mz.study.spring.article.model.Article;
-import kr.mz.study.spring.exception.ArticleNotFoundException;
-import kr.mz.study.spring.exception.DeleteFailedException;
-import kr.mz.study.spring.exception.InsertFailedException;
-import kr.mz.study.spring.exception.PageNotFoundException;
-import kr.mz.study.spring.exception.UpdateFailedException;
 
 public interface ArticleService {
 	
-	public List<Article> findArticles(Integer offset, Integer limit) throws PageNotFoundException;
+	public List<Article> findArticles(Integer offset, Integer limit);
 	
-	public Article findArticle(Integer idx) throws ArticleNotFoundException;
+	public Article findArticle(Integer idx);
 	
-	public int save(Article article) throws InsertFailedException;
+	public int save(Article article);
 	
-	public int update(Article article) throws UpdateFailedException;
+	public int update(Article article);
 	
-	public int delete(Article article) throws DeleteFailedException;
+	public int delete(Article article);
 	
 	public boolean selectPassword(Article article);
+	
+	public int findCountAll();
 	
 }
