@@ -4,23 +4,26 @@ import java.util.Date;
 
 import javax.validation.constraints.NotNull;
 
-import kr.mz.study.spring.article.groups.ArticleGroups;
+import kr.mz.study.spring.article.groups.ArticleGroups.Delete;
+import kr.mz.study.spring.article.groups.ArticleGroups.Password;
+import kr.mz.study.spring.article.groups.ArticleGroups.Save;
+import kr.mz.study.spring.article.groups.ArticleGroups.Update;
 
 public class Article {
 	
-	
+	@NotNull(groups= {Update.class, Delete.class, Password.class})
 	private Integer idx;
 
-	@NotNull
+	@NotNull(groups= {Save.class, Update.class})
 	private String userName;
 	
-	@NotNull(groups=ArticleGroups.Password.class)
+	@NotNull(groups= {Save.class, Update.class, Password.class})
 	private String password;
 	
-	@NotNull
+	@NotNull(groups= {Save.class, Update.class})
 	private String title;
 	
-	@NotNull
+	@NotNull(groups= {Save.class, Update.class})
 	private String content;
 	
 	private Date created;
