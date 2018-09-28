@@ -40,8 +40,15 @@
 				totalPostCount="${totalPostCount}"
 				countPostPerPage="10" />
 		</div>
-
 	</div>
+	
+	<br/>
+	<br/>
+	
+	<form action="/spring/logout" method="POST">
+		<input type="submit" value="로그아웃"/>
+		<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+	</form>
 	
 <script src="//code.jquery.com/jquery-latest.min.js"></script>
 <script src="<c:url value="/resources/js/article.js"/>"></script>

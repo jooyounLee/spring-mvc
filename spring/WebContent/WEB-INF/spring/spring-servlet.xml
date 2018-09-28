@@ -17,5 +17,6 @@
 	
 	<mvc:resources mapping="/resources/**" location="/resources/" />
 	
+	<context:annotation-config></context:annotation-config>
 	<context:component-scan base-package="kr.mz.study.spring" />
 </beans>
